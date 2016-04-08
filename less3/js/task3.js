@@ -54,6 +54,9 @@
     }
 
     function elemRedraw(name) {
+        if (name == 'month') { // FIXME: Kostyl
+            time[name] = time[name] + 1;
+        }
         document.querySelector('.' + name).innerText = time[name]; // TODO: Ссылки на элемент, не искать каждый раз при перерисовке.
     }
 }).call();
