@@ -57,6 +57,9 @@
         if (name == 'month') { // FIXME: Kostyl
             time[name] = time[name] + 1;
         }
+        if (time[name] < 10) { // FIXME: Kostyl?
+            time[name] = '0' + time[name]
+        }
         document.querySelector('.' + name).innerText = time[name]; // TODO: Ссылки на элемент, не искать каждый раз при перерисовке.
     }
 }).call();
