@@ -23,6 +23,16 @@
         month: 0
     };
 
+    var SELECTORS = {
+        hours: document.querySelector('.hours'),
+        minutes: document.querySelector('.minutes'),
+        seconds: document.querySelector('.seconds'),
+        date: document.querySelector('.date'),
+        month: document.querySelector('.month')
+    };
+
+    console.log(SELECTORS);
+
     getRealTime();
     whatChanged(time, realTime);
 
@@ -60,6 +70,7 @@
         if (time[name] < 10) { // FIXME: Kostyl?
             time[name] = '0' + time[name]
         }
-        document.querySelector('.' + name).innerText = time[name]; // TODO: Ссылки на элемент, не искать каждый раз при перерисовке.
+
+        SELECTORS[name].innerText = time[name];
     }
 }).call();
