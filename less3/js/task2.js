@@ -12,14 +12,15 @@
     var rows = 10;
     var cells = 10;
     var table;
-    var row;
-    var cell;
+    var tr;
+    var td;
 
     var form = document.querySelector('.form');
     var table = document.querySelector('.table');
     var rowsInput = document.querySelector('.rows');
     var cellsInput = document.querySelector('.cells');
     var drawButton = document.querySelector('.draw');
+    var tableContent = document.createDocumentFragment();
 
     function drawTable(rows, cells) {
         table = document.createElement('table');
@@ -29,23 +30,53 @@
         for (var i = 0; i < rows; i++) {
             drawTr();
             for (var j = 0; j < cells; j++) {
-                //cell = document.createElement('td');
-                console.log(i);
-                //drawTd(row[i]);
+                drawTd();
             }
         }
+        table.appendChild(tableContent);
+        console.log(table);
+        getIndex(table);
     }
 
     function drawTr() {
-        row = document.createElement('tr');
-        table.appendChild(row); // TODO: Add whole collection of tags once
+        tr = document.createElement('tr');
+        tableContent.appendChild(tr);
+        return tableContent;
     }
 
-    function drawTd(tr) {
-        cell = document.createElement('td');
-        tr.appendChild(cell); // TODO: Add whole collection of tags once
+    function drawTd() {
+        td = document.createElement('td');
+        tr.appendChild(td);
+        return tableContent;
     }
 
-    drawTable(rows, cells);
+    drawButton.onclick = function(e) {
+        e.preventDefault();
+        rows = rowsInput.value;
+        cells = cellsInput.value;
+        drawTable(rows, cells);
+    };
+
+    function clearCell(cell) {
+        setTimeout(function() {
+            cell.innerText = '';
+            console.log('clear');
+        }, 2000);
+    }
+
+    function getIndex(table) {
+        var tds = table.getElementsByTagName('td');
+
+        for(var i = 0; i < tds.length; i++) {
+
+            tds[i].onclick = function(){
+                var cellIndex  = this.cellIndex + 1;
+                var rowIndex = this.parentNode.rowIndex + 1;
+
+                this.innerText = "cell: " + cellIndex + "\n row: " + rowIndex;
+                clearCell(this);
+            }
+        }
+    }
 
 }).call();
