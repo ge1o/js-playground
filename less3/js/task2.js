@@ -60,7 +60,6 @@
     function clearCell(cell) {
         setTimeout(function() {
             cell.innerText = '';
-            console.log('clear');
         }, 2000);
     }
 
