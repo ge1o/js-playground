@@ -1,0 +1,29 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.slider-container {
+
+}
+
+.slider {
+	list-style-type: none;
+	padding: 0;
+	position: relative;
+	overflow: hidden;
+	margin: 50px auto;
+}
+
+.slider li {
+	position: absolute;
+	width: 100%;
+
+}
+.slider img {
+	display: block;
+	width: 100%;
+	cursor: -webkit-grab;
+}
