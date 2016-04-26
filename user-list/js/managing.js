@@ -94,6 +94,7 @@ app.Manager = (function (_, document, app) {
             //console.log(result);
 
             this.render(result);
+            this.storage.remove(result);
         },
 
         removeItems: function (elems) {
@@ -165,7 +166,7 @@ app.Manager = (function (_, document, app) {
         clearItems: function () {
             var elems = this.storage.getData();
             this.removeItems(elems);
-            this.storage.clear(elems);
+            this.storage.clear();
         },
 
         setItems: function (data) {
