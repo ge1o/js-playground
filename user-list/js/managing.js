@@ -20,6 +20,7 @@ app.Manager = (function (_, document, app) {
 
         findNodes: function () {
             this.nodes = {
+                table: document.querySelector('.list'),
                 lastName: document.getElementById('last-name'),
                 firstName: document.getElementById('first-name'),
                 age: document.getElementById('age'),
@@ -28,6 +29,7 @@ app.Manager = (function (_, document, app) {
                 clearButton: document.getElementById('clear-button'),
                 removeUserButtons: document.getElementsByClassName('remove-user-button'),
                 removeUserButtonModal: document.getElementById('remove-user-button-modal'),
+                cancelButton: document.getElementById('cancel-button')
                 //removeUserModal: document.getElementById('delete-user')
             };
         },
@@ -38,13 +40,24 @@ app.Manager = (function (_, document, app) {
                 this.addPerson();
             }.bind(this));
 
-            for (var i = 0; i < this.nodes.removeUserButtons.length; i++) {
-                this.nodes.removeUserButtons[i].addEventListener('click', this.passDataToModal.bind(this), false);
-            }
+
+            this.nodes.table.onclick = function(event) {
+                var target = event.target;
+
+                var buttonId = target.dataset.id || target.parentNode.dataset.id;
+
+                if (target.classList.contains('remove-user-button') || target.parentNode.classList.contains('remove-user-button')) {
+                    console.log(buttonId);
+                    this.passDataToModal(buttonId);
+                } else {
+                    return;
+                }
+            }.bind(this);
 
             this.nodes.saveButton.addEventListener('click', this.saveItems.bind(this));
             this.nodes.clearButton.addEventListener('click', this.clearItems.bind(this));
             this.nodes.removeUserButtonModal.addEventListener('click', this.removeItem.bind(this));
+            this.nodes.cancelButton.addEventListener('click', this.cancel.bind(this));
         },
 
         initTemplate: function () {
@@ -63,43 +76,32 @@ app.Manager = (function (_, document, app) {
         },
 
         renderItem: function (data) {
-            console.log(data);
             return this.template(data);
         },
 
-        removeItem: function (e) { // TODO: Delete from temp store, combine with removeItems();
+        removeItem: function (e) { // TODO: Combine with removeItems();
             //console.log(this.storage.tempStorage);
-
-
-
             elemId = e.currentTarget.dataset.id;
             //elem = this.storage.getById(parseInt(elemId));
-
             elems = this.storage.tempStorage;
-
-            //console.log(elems);
+            console.log(elemId);
             var result = _.reject(elems, function(item) {
-
                 //console.log(elemId);
                 //console.log(item.id == elemId);
                 //console.log(item.id);
                 if (item.id == elemId) {
-                    console.log(item);
+                    console.log(item, 'this to be removed');
+                    this.storage.remove(item);
                     return this.renderItem(item);
                     //return this.renderItem(item);
                 }
-
             }.bind(this), '');
-
             //console.log(result);
-
             this.render(result);
-            this.storage.remove(result);
         },
 
         removeItems: function (elems) {
             var result = _.reject(elems, function(item) {
-                //console.log(item);
                 return elems + this.renderItem(item);
             }.bind(this), '');
 
@@ -110,8 +112,8 @@ app.Manager = (function (_, document, app) {
             return Math.round(+new Date()/1000);
         },
 
-        passDataToModal: function (e) {
-            this.nodes.removeUserButtonModal.dataset.id = e.currentTarget.dataset.id;
+        passDataToModal: function (buttonId) {
+            this.nodes.removeUserButtonModal.dataset.id = buttonId;
         },
 
         dataIsValid: function (data) {
@@ -171,6 +173,14 @@ app.Manager = (function (_, document, app) {
 
         setItems: function (data) {
             this.storage.set(data);
+        },
+
+        cancel: function () {
+            console.log(this.storage.cancelled, 'cancelled');
+            if (this.storage.cancelled.length > 0) {
+                this.render(this.storage.cancelled);
+                this.storage.cancelled = this.storage.tempStorage;
+            }
         }
 
     };

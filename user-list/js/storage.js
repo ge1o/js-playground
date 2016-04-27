@@ -11,6 +11,7 @@ app.Storage = (function (window, _) {
     function Storage(type) {
         this.storage = window.localStorage;
         this.tempStorage = [];
+        this.cancelled = [];
         return this;
     }
 
@@ -39,7 +40,16 @@ app.Storage = (function (window, _) {
             return result;
         },
 
-        remove: function (key) {},
+        remove: function (key) {
+            //console.log(key.id, ' remove');
+            console.log(this.tempStorage, ' tempStorage');
+            this.cancelled = this.tempStorage;
+            //console.log(this.getById(key.id));
+            //obj = _.find(this.tempStorage, function(obj) { return obj.id == key.id });
+            this.tempStorage = _.without(this.tempStorage, _.findWhere(this.tempStorage, {id: key.id}));
+
+            //this.cancelled = [];
+        },
 
         save: function () {
             localStorage.setItem('persons', toSTR(this.tempStorage));
@@ -51,7 +61,7 @@ app.Storage = (function (window, _) {
             if (data) {
                 this.tempStorage = toJSON(data);
             } else {
-                this.tempStorage = {};
+                this.tempStorage = [];
             }
         },
 
@@ -62,7 +72,11 @@ app.Storage = (function (window, _) {
             //    console.log(this.getById(item.id));
             //}.bind(this));
 
-            this.tempStorage = [];
+
+            this.cancelled = this.tempStorage;
+            //this.tempStorage = [];
+
+            console.log(this.cancelled, 'cancelled');
 
             //elems.forEach(function(item, index) {
             //    if(JSON.stringify(this.tempStorage[index]) === JSON.stringify(item)) {
