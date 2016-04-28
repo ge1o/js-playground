@@ -26,6 +26,10 @@
             $('#remove-user-button-modal').click(function () {
                 $('#delete-user').modal('hide');
             });
+
+            $('#edit-user-button-modal').click(function () {
+                $('#edit-user').modal('hide');
+            });
         }
     </script>
 
@@ -47,8 +51,29 @@
         <td>{{ firstName }}</td>
         <td>{{ age }}</td>
         <td><button type="button" class="btn btn-danger remove-user-button" data-toggle="modal" data-target="#delete-user" title="Remove" id="" data-id="{{ id }}"><span class="glyphicon glyphicon-remove"></span></button></td>
-        <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit-user" title="Edit" data-id="{{ id }}"><span class="glyphicon glyphicon-pencil"></span></button></td>
+        <td><button type="button" class="btn btn-info edit-user-button" data-toggle="modal" data-target="#edit-user" title="Edit" data-id="{{ id }}"><span class="glyphicon glyphicon-pencil"></span></button></td>
     </tr>
+</template>
+
+<template id="edit-form">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" class="form-control" id="first-name-modal" name="firstName" placeholder="First Name" value="{{ firstName }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" class="form-control" id="last-name-modal" placeholder="Last Name" value="{{ lastName }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="number" class="form-control" id="age-modal" placeholder="Age" value="{{ age }}">
+            </div>
+        </div>
+
+    </form>
 </template>
 
 <div class="container">
@@ -90,10 +115,10 @@
             <form class="form-horizontal">
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" >Filter</button>
+                        <button class="btn btn-default filter-button" type="button">Filter</button>
                         <button class="btn btn-default" type="button" data-toggle="tooltip" data-placement="top" title="Age:&nbsp;18 First&nbsp;Name:&nbsp;Oleh Last&nbsp;Name:&nbsp;Rudnyi"><span class="glyphicon glyphicon-info-sign"></span></button>
                     </span>
-                    <input type="text" class="form-control" placeholder="Filter">
+                    <input type="text" class="form-control filter-input" placeholder="Filter">
                 </div>
             </form>
             <table class="table table-striped table-hover list">
@@ -179,31 +204,16 @@
             <div class="modal-body clearfix">
                 <!-- -->
                 <div class="col-md-4 col-md-offset-4">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <input type="text" class="form-control" id="first-name" placeholder="First Name">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <input type="text" class="form-control" id="last-name" placeholder="Last Name">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <input type="number" class="form-control" id="age" placeholder="Age">
-                            </div>
-                        </div>
+                    <div class="edit-form">
 
-                    </form>
+                    </div>
                 </div>
                 <!-- -->
             </div>
             <div class="modal-footer">
                 <div class="form-group">
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-success" id="edit-user-button-modal">Save</button>
                     </div>
                 </div>
             </div>

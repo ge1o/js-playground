@@ -29,7 +29,7 @@ app.Storage = (function (window, _) {
             var result;
 
             this.tempStorage.some(function (el) {
-                var isValidId = el.id === id;
+                var isValidId = el.id === parseInt(id);
                 if (isValidId) {
                     result = el;
                 }
@@ -41,14 +41,11 @@ app.Storage = (function (window, _) {
         },
 
         remove: function (key) {
-            //console.log(key.id, ' remove');
-            console.log(this.tempStorage, ' tempStorage');
-            this.cancelled = this.tempStorage;
-            //console.log(this.getById(key.id));
-            //obj = _.find(this.tempStorage, function(obj) { return obj.id == key.id });
-            this.tempStorage = _.without(this.tempStorage, _.findWhere(this.tempStorage, {id: key.id}));
+            if (this.cancelled.length == 0) {
+                this.cancelled = this.tempStorage;
+            }
 
-            //this.cancelled = [];
+            this.tempStorage = _.without(this.tempStorage, _.findWhere(this.tempStorage, {id: key.id}));
         },
 
         save: function () {
@@ -65,29 +62,19 @@ app.Storage = (function (window, _) {
             }
         },
 
-        clear: function (elems) {
-            //console.log(this.tempStorage);
-            ////console.log(elems);
-            //elems.forEach(function(item, index) {
-            //    console.log(this.getById(item.id));
-            //}.bind(this));
+        clear: function () {
+            this.tempStorage = [];
+        },
 
+        cancel: function() {
+            this.tempStorage = this.cancelled;
+            this.cancelled = [];
+        },
 
-            this.cancelled = this.tempStorage;
-            //this.tempStorage = [];
-
-            console.log(this.cancelled, 'cancelled');
-
-            //elems.forEach(function(item, index) {
-            //    if(JSON.stringify(this.tempStorage[index]) === JSON.stringify(item)) {
-            //        console.log('==');
-            //        this.tempStorage[index] = {};
-            //    }
-            //    console.log(this.tempStorage);
-            //    //console.log(item);
-            //}.bind(this));
-
+        filter: function () {
+            console.log('set to tempStorage');
         }
+
 
     };
 
