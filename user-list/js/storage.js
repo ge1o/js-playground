@@ -40,6 +40,21 @@ app.Storage = (function (window, _) {
             return result;
         },
 
+        getByKey: function(data) {
+            var key = Object.keys(data)[0];
+            var result = [];
+
+            this.tempStorage.forEach(function (el) {
+                var isValidId = el[key] === data[key];
+
+                if (isValidId) {
+                    result.push(el);
+                }
+            });
+
+            return result;
+        },
+
         remove: function (key) {
             if (this.cancelled.length == 0) {
                 this.cancelled = this.tempStorage;
@@ -71,11 +86,14 @@ app.Storage = (function (window, _) {
             this.cancelled = [];
         },
 
-        filter: function () {
+        filter: function (data) {
             console.log('set to tempStorage');
+            this.tempStorage = [];
+
+            for (var i = 0; i < data.length; i++) {
+                this.set(data[i]);
+            }
         }
-
-
     };
 
     return Storage;

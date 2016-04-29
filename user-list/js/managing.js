@@ -1,4 +1,7 @@
 app.Manager = (function (_, document, app) {
+    // TODO: Max 20
+    // TODO: Remove if 21
+    // TODO: Add new first, not last
 
     function Manager(el, options) {
         options = options || {};
@@ -77,14 +80,19 @@ app.Manager = (function (_, document, app) {
         },
 
         render: function (data) {
-
             var data = data || this.storage.getData();
-            console.log(data, ' incoming');
             var result = data.reduce(function (sum, el) {
                 return sum + this.renderItem(el);
             }.bind(this), '');
 
             this.el.innerHTML = result;
+        },
+
+        renderItem: function (data) {
+            this.setCancelled();
+            console.log(this.template(data));
+
+            return this.template(data);
         },
 
         initEditForm: function (id) {
@@ -105,12 +113,6 @@ app.Manager = (function (_, document, app) {
         renderForm: function (data) {
             var result = this.formTemplate(data);
             this.nodes.editForm.innerHTML = result;
-        },
-
-        renderItem: function (data) {
-            this.setCancelled();
-
-            return this.template(data);
         },
 
         editItem: function () {
@@ -229,22 +231,60 @@ app.Manager = (function (_, document, app) {
             }
         },
 
+        getFilterData: function (string) {
+            var data = {};
+            var valueInput;
+            var fieldInput;
+            var pattern = /^(?:([\w ]+): ?(.*)| *([1-9]\d+) *)$/;
+            var result = string.match(pattern);
+
+            if (result) {
+                if (Number.isInteger(parseInt(result.input))) {
+                    valueInput = parseInt(result[0]);
+                    data.id = valueInput;
+
+                    return data;
+                } else {
+                    fieldInput = result[1].toLowerCase().replace(/\s+/g, '');
+
+                    switch (fieldInput) {
+                        case 'firstname':
+                            fieldInput = 'firstName';
+
+                            break;
+
+                        case 'lastname':
+                            fieldInput = 'lastName';
+
+                            break;
+                    }
+
+                    valueInput = result[2].trim(); // TODO: trim() when adding data
+                    data[fieldInput] = valueInput;
+
+                    return data;
+                }
+            }
+        },
+
         filter: function () {
-            this.setCancelled();
-            console.log(this.storage, ' here');
-            var string = this.nodes.filterInput.value;
-            //console.log(this.storage.getById(string));
             var filtered = [];
+            var dataToSearch;
+            var string = this.nodes.filterInput.value;
+
+            this.setCancelled();
+
+            dataToSearch = this.getFilterData(string);
+
             if (string == '') {
-                console.log('empty query'); // TODO: show all
+                this.render(this.storage.tempStorage);
+                return;
             } else {
-                filtered.push(this.storage.getById(string));
+                filtered = this.storage.getByKey(dataToSearch);
             }
 
-            //console.log(filtered);
             this.render(filtered);
             this.storage.filter(filtered);
-            //console.log(this.storage.tempStorage);
         }
 
     };
